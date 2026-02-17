@@ -1,0 +1,20 @@
+[
+  {
+    "id": "piug2070s",
+    "definitionId": "rsi",
+    "visible": true,
+    "inputs": {
+      "period": 14
+    },
+    "plots": [
+      {
+        "id": "rsi",
+        "type": "line",
+        "title": "RSI",
+        "color": "#7E57C2",
+        "lineWidth": 2
+      }
+    ],
+    "paneIndex": 1
+  }
+]
