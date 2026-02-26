@@ -1,6 +1,7 @@
 const { WebSocketServer } = require('ws');
 const indicatorHandler = require('./handlers/indicatorHandler');
 const drawingHandler = require('./handlers/drawingHandler');
+const appActionHandler = require('./handlers/appActionHandler');
 
 const PORT = 8080;
 
@@ -24,6 +25,9 @@ wss.on('connection', (ws) => {
           break;
         case 'indicators':
           await indicatorHandler.handle(ws, message);
+          break;
+        case 'app_action':
+          await appActionHandler.handle(wss, ws, message);
           break;
         default:
           console.warn(`Unknown key: ${key}`);
