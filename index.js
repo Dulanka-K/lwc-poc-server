@@ -1,9 +1,9 @@
+require('dotenv').config();
 const { WebSocketServer } = require('ws');
 const indicatorHandler = require('./handlers/indicatorHandler');
 const drawingHandler = require('./handlers/drawingHandler');
 const appActionHandler = require('./handlers/appActionHandler');
-
-const PORT = 8080;
+const { PORT, MESSAGE_KEYS } = require('./constants');
 
 const wss = new WebSocketServer({ port: PORT });
 
@@ -20,13 +20,13 @@ wss.on('connection', (ws) => {
       console.log(`Received action: ${action} for key: ${key}`);
 
       switch (key) {
-        case 'drawings':
+        case MESSAGE_KEYS.DRAWINGS:
           await drawingHandler.handle(ws, message);
           break;
-        case 'indicators':
+        case MESSAGE_KEYS.INDICATORS:
           await indicatorHandler.handle(ws, message);
           break;
-        case 'app_action':
+        case MESSAGE_KEYS.APP_ACTION:
           await appActionHandler.handle(wss, ws, message);
           break;
         default:

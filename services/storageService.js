@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const { DATA_FOLDER } = require('../constants');
 
 // Resolves to d:\Other\lwc-poc-server\data
-const DATA_DIR = path.join(__dirname, '../data');
+const DATA_DIR = path.join(__dirname, '..', DATA_FOLDER);
 
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR);
