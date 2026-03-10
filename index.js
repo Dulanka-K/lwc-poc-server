@@ -3,6 +3,7 @@ const { WebSocketServer } = require('ws');
 const indicatorHandler = require('./handlers/indicatorHandler');
 const drawingHandler = require('./handlers/drawingHandler');
 const appActionHandler = require('./handlers/appActionHandler');
+const dataHandler = require('./handlers/dataHandler');
 const { PORT, MESSAGE_KEYS } = require('./constants');
 
 const wss = new WebSocketServer({ port: PORT });
@@ -29,6 +30,9 @@ wss.on('connection', (ws) => {
         case MESSAGE_KEYS.APP_ACTION:
           await appActionHandler.handle(wss, ws, message);
           break;
+        case MESSAGE_KEYS.DATA_PROVIDER:
+          dataHandler.handle(ws, message);
+          break;
         default:
           console.warn(`Unknown key: ${key}`);
       }
@@ -40,6 +44,7 @@ wss.on('connection', (ws) => {
   // Event listener for client disconnection
   ws.on('close', () => {
     console.log('Client disconnected');
+    dataHandler.cleanup(ws);
   });
 
   // Event listener for errors
