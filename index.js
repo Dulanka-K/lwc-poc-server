@@ -1,4 +1,5 @@
 require('dotenv').config();
+const os = require('os');
 const { WebSocketServer } = require('ws');
 const indicatorHandler = require('./handlers/indicatorHandler');
 const drawingHandler = require('./handlers/drawingHandler');
@@ -6,9 +7,26 @@ const appActionHandler = require('./handlers/appActionHandler');
 const dataHandler = require('./handlers/dataHandler');
 const { PORT, MESSAGE_KEYS } = require('./constants');
 
-const wss = new WebSocketServer({ port: PORT });
+const getLocalIpAddress = () => {
+  const interfaces = os.networkInterfaces();
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      // Skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+      if ('IPv4' !== iface.family || iface.internal) {
+        continue;
+      }
+      return iface.address;
+    }
+  }
+  return null;
+};
 
-console.log(`WebSocket server is running on ws://localhost:${PORT}`);
+const wss = new WebSocketServer({ port: PORT });
+const localIp = getLocalIpAddress();
+
+console.log(`WebSocket server is running!`);
+console.log(`- Local:   ws://localhost:${PORT}`);
+if (localIp) console.log(`- Network: ws://${localIp}:${PORT}`);
 
 wss.on('connection', (ws) => {
   console.log('New client connected');
